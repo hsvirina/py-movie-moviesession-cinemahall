@@ -1,7 +1,8 @@
 from db.models import Movie, CinemaHall, MovieSession
-from typing import Optional, List
+from typing import Optional
 from datetime import datetime
 from django.utils import timezone
+from django.db.models.query import QuerySet
 
 
 def create_movie_session(
@@ -23,13 +24,13 @@ def create_movie_session(
 
 
 def get_movies_sessions(
-    session_date: Optional[str] = None
-) -> List[MovieSession]:
+        session_date: Optional[str] = None
+) -> QuerySet[MovieSession]:
     if session_date is None:
-        return list(MovieSession.objects.all())
+        return MovieSession.objects.all()
 
     date_obj = datetime.strptime(session_date, "%Y-%m-%d").date()
-    return list(MovieSession.objects.filter(show_time__date=date_obj))
+    return MovieSession.objects.filter(show_time__date=date_obj)
 
 
 def get_movie_session_by_id(movie_session_id: int) -> MovieSession:
